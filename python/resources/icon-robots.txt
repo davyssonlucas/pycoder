@@ -1,5 +1,5 @@
 # Only has artwork stuff
 skip: lafs
-skip: pycharm-ce*
+skip: pycoder*
 skip: PyCharmCore*
-skip: pycharm_core*
+skip: pycoder_logo*

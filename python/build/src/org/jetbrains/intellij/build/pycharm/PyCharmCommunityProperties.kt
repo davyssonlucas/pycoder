@@ -26,6 +26,9 @@ class PyCharmCommunityProperties(private val communityHome: Path) : PyCharmPrope
   override val customProductCode: String
     get() = "PC"
 
+  override val baseFileName: String
+    get() = "pycoder"
+
   init {
     platformPrefix = "PyCharmCore"
     applicationInfoModule = "intellij.pycharm.community"
@@ -51,7 +54,7 @@ class PyCharmCommunityProperties(private val communityHome: Path) : PyCharmPrope
 
     productLayout.skipUnresolvedContentModules = true
 
-    baseDownloadUrl = "https://download.jetbrains.com/python/"
+    baseDownloadUrl = "https://github.com/davyssonlucas/pycoder/releases/"
 
     mavenArtifacts.forIdeModules = true
     additionalVmOptions = persistentListOf("-Dllm.show.ai.promotion.window.on.start=false")
@@ -97,35 +100,31 @@ class PyCharmCommunityProperties(private val communityHome: Path) : PyCharmPrope
   }
 
   override fun getSystemSelector(appInfo: ApplicationInfoProperties, buildNumber: String): String {
-    return "PyCharmCE${appInfo.majorVersion}.${appInfo.minorVersionMainPart}"
+    return "pycoder${appInfo.majorVersion}.${appInfo.minorVersionMainPart}"
   }
 
-  override fun getBaseArtifactName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "pycharmPC-$buildNumber"
+  override fun getBaseArtifactName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "pycoder-$buildNumber"
 
   override fun createWindowsCustomizer(projectHome: Path): WindowsDistributionCustomizer = windowsCustomizer(communityHome) {
     fileAssociations = SUPPORTED_FILE_EXTENSIONS
 
-    fullName { "PyCharm Open Source" }
-    installDirNameHandler { "PyCharm OSS" }
+    fullName { "pycoder" }
+    installDirNameHandler { "pycoder" }
 
     copyAdditionalFiles { targetDir, _, context ->
       PyCharmBuildUtils.copySkeletons(context, targetDir, "skeletons-win*.zip")
-    }
-
-    uninstallFeedbackUrl { appInfo ->
-      "https://www.jetbrains.com/pycharm/uninstall/?version=${appInfo.productCode}-${appInfo.majorVersion}.${appInfo.minorVersion}"
     }
   }
 
   override fun createMacCustomizer(projectHome: Path): MacDistributionCustomizer = object : MacDistributionCustomizer() {
     init {
-      bundleIdentifier = "com.jetbrains.pycharm.ce"
+      bundleIdentifier = "io.github.davyssonlucas.pycoder"
       fileAssociations = SUPPORTED_FILE_EXTENSIONS.map {
         FileAssociation(it)
       }
     }
 
-    override fun getRootDirectoryName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "PyCharm OSS.app"
+    override fun getRootDirectoryName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "pycoder.app"
 
     override fun copyAdditionalFiles(context: BuildContext, targetDir: Path, arch: JvmArchitecture) {
       super.copyAdditionalFiles(context, targetDir, arch)
@@ -138,8 +137,8 @@ class PyCharmCommunityProperties(private val communityHome: Path) : PyCharmPrope
   }
 
   override fun createLinuxCustomizer(projectHome: Path): LinuxDistributionCustomizer = object : LinuxDistributionCustomizer() {
-    override fun getRootDirectoryName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "pycharm-oss"
+    override fun getRootDirectoryName(appInfo: ApplicationInfoProperties, buildNumber: String): String = "pycoder"
   }
 
-  override fun getOutputDirectoryName(appInfo: ApplicationInfoProperties): String = "pycharm-ce"
+  override fun getOutputDirectoryName(appInfo: ApplicationInfoProperties): String = "pycoder"
 }
